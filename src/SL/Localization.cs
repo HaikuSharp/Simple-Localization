@@ -38,6 +38,7 @@ public sealed class Localization(string name) : ILocalization
         OnLoaded?.Invoke();
     }
 
+    /// <inheritdoc/>
     public void Save(ILocalizationSource source)
     {
         foreach(var kvp in m_Values) source.SetRaw(kvp.Key, kvp.Value);
