@@ -1,0 +1,9 @@
+<Solution>
+  <Folder Name="/Элементы решения/">
+    <File Path=".editorconfig" />
+    <File Path="Directory.Build.props" />
+  </Folder>
+  <Project Path="SL.Abstraction/SL.Abstraction.csproj" />
+  <Project Path="SL.Newtonsoft.JSON/SL.Newtonsoft.JSON.csproj" Id="8f6b4c68-a65e-440b-be23-f1598619fab2" />
+  <Project Path="SL/SL.csproj" Id="323a4dff-58ac-4d83-b6c2-513298d3f3cf" />
+</Solution>
