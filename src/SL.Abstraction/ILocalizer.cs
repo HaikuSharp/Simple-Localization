@@ -10,5 +10,5 @@ public interface ILocalizer
     /// </summary>
     /// <param name="localizeKey">The key to localize.</param>
     /// <returns>A localized string that will be translated based on the current localization.</returns>
-    ILocalizedString Localize(string localizeKey);
+    ILocalizedString GetLocalizedString(string localizeKey);
 }

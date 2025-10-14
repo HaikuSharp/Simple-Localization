@@ -20,7 +20,7 @@ public sealed class Localization(string name) : ILocalization
     public string Name => name;
 
     /// <inheritdoc/>
-    public string Localize(string localizeKey) => m_Values.TryGetValue(localizeKey, out var localizedValue) ? localizedValue : localizeKey;
+    public string Localize(string localizeKey) => m_Values.TryGetValue(localizeKey, out var value) ? value : m_Values[localizeKey] = localizeKey;
 
     /// <inheritdoc/>
     public void Load(ILocalizationSource source)

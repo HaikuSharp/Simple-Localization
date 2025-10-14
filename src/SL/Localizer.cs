@@ -34,7 +34,7 @@ public sealed class Localizer : ILocalizer, ILocalizationProvider, ILocalization
     public ILocalization CurrentLocalization { get; private set; }
 
     /// <inheritdoc/>
-    public ILocalizedString Localize(string localizeKey) => m_Strings.TryGetValue(localizeKey, out var str) ? str : CreateLocalizedString(localizeKey);
+    public ILocalizedString GetLocalizedString(string localizeKey) => m_Strings.TryGetValue(localizeKey, out var str) ? str : CreateLocalizedString(localizeKey);
 
     /// <inheritdoc/>
     public bool HasLocalization(string name) => m_Localizations.ContainsKey(name);
