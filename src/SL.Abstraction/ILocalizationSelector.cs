@@ -4,8 +4,7 @@
 /// Represents a handler for localization change events.
 /// </summary>
 /// <param name="name">The name of the new current localization.</param>
-/// <param name="localization">The new current localization instance.</param>
-public delegate void LocalizationChangeHandler(string name, ILocalization localization);
+public delegate void LocalizationChangeHandler(string name);
 
 /// <summary>
 /// Provides functionality for selecting and managing the current localization.

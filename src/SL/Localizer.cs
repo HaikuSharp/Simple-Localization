@@ -26,12 +26,12 @@ public sealed class Localizer : ILocalizer, ILocalizationProvider, ILocalization
         {
             if(field == value) return;
             field = value;
-            OnChanged?.Invoke(value, ChangeLocalization(value));
+            OnChanged?.Invoke(value);
         }
     }
 
     /// <inheritdoc/>
-    public ILocalization CurrentLocalization { get; private set; }
+    public ILocalization CurrentLocalization => m_Localizations.TryGetValue(CurrentLocalizationName, out var localization) ? localization : null;
 
     /// <inheritdoc/>
     public ILocalizedString GetLocalizedString(string localizeKey) => m_Strings.TryGetValue(localizeKey, out var str) ? str : CreateLocalizedString(localizeKey);
@@ -47,8 +47,6 @@ public sealed class Localizer : ILocalizer, ILocalizationProvider, ILocalization
 
     /// <inheritdoc/>
     public void RemoveLocalization(string localizationName) => _ = m_Localizations.Remove(localizationName);
-
-    private ILocalization ChangeLocalization(string name) => CurrentLocalization = m_Localizations.TryGetValue(name, out var localization) ? localization : null;
 
     private LozalizedString CreateLocalizedString(string localizeKey)
     {
