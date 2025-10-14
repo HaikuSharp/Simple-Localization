@@ -111,7 +111,6 @@ public class JsonFileLocalizationSource(string filePath, string separator, JsonS
                 FlattenJsonObject(property.Value, newPath, result);
             }
             break;
-
             case JTokenType.Array:
             var index = 0;
             foreach(var element in (JArray)token)
@@ -121,7 +120,6 @@ public class JsonFileLocalizationSource(string filePath, string separator, JsonS
                 index++;
             }
             break;
-
             default:
             result[currentPath] = new RawLocalizedString(currentPath, token.ToString() ?? string.Empty);
             break;
@@ -136,8 +134,9 @@ public class JsonFileLocalizationSource(string filePath, string separator, JsonS
         {
             var pathParts = raw.Key.Split([m_Separator], System.StringSplitOptions.RemoveEmptyEntries);
             JObject currentObject = root;
+            int lastIndex = pathParts.Length - 1;
 
-            for(int i = 0; i < pathParts.Length - 1; i++)
+            for(int i = 0; i < lastIndex; i++)
             {
                 var part = pathParts[i];
 
@@ -150,7 +149,7 @@ public class JsonFileLocalizationSource(string filePath, string separator, JsonS
                 currentObject = (JObject)nextToken;
             }
 
-            currentObject.Add(raw.Key, raw.Value);
+            currentObject.Add(pathParts[lastIndex], raw.Value);
         }
 
         return root;
