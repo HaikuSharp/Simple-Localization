@@ -11,16 +11,19 @@ public sealed class Localization(string name) : ILocalization
     private readonly Dictionary<string, string> m_Values = [];
 
     /// <inheritdoc/>
-    public string Name => name;
+    public event LocalizationLoadHandler OnLoaded;
 
     /// <inheritdoc/>
-    public event LocalizationUpdateHandler OnUpdated;
+    public event LocalizationLoadHandler OnSaved;
+
+    /// <inheritdoc/>
+    public string Name => name;
 
     /// <inheritdoc/>
     public string Localize(string localizeKey) => m_Values.TryGetValue(localizeKey, out var localizedValue) ? localizedValue : localizeKey;
 
     /// <inheritdoc/>
-    public void Update(ILocalizationSource source)
+    public void Load(ILocalizationSource source)
     {
         var values = m_Values;
 
@@ -32,6 +35,13 @@ public sealed class Localization(string name) : ILocalization
             values.Add(key, value);
         }
 
-        OnUpdated?.Invoke();
+        OnLoaded?.Invoke();
+    }
+
+    public void Save(ILocalizationSource source)
+    {
+        foreach(var kvp in m_Values) source.SetRaw(kvp.Key, kvp.Value);
+
+        OnSaved?.Invoke();
     }
 }

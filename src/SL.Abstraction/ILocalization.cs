@@ -1,9 +1,14 @@
 ﻿namespace SL.Abstraction;
 
 /// <summary>
-/// Represents a handler for localization update events.
+/// Represents a handler for localization load events.
 /// </summary>
-public delegate void LocalizationUpdateHandler();
+public delegate void LocalizationLoadHandler();
+
+/// <summary>
+/// Represents a handler for localization save events.
+/// </summary>
+public delegate void LocalizationSaveHandler();
 
 /// <summary>
 /// Represents a localization that provides string translation capabilities.
@@ -11,9 +16,14 @@ public delegate void LocalizationUpdateHandler();
 public interface ILocalization
 {
     /// <summary>
-    /// Occurs when the localization data is updated.
+    /// Occurs when the localization data is loaded.
     /// </summary>
-    event LocalizationUpdateHandler OnUpdated;
+    event LocalizationLoadHandler OnLoaded;
+
+    /// <summary>
+    /// Occurs when the localization data is saved.
+    /// </summary>
+    event LocalizationLoadHandler OnSaved;
 
     /// <summary>
     /// Gets the name of the localization.
@@ -28,8 +38,14 @@ public interface ILocalization
     string Localize(string localizeKey);
 
     /// <summary>
-    /// Updates the localization data from the specified source.
+    /// Loads the localization data from the specified source.
     /// </summary>
-    /// <param name="source">The source containing the updated localization data.</param>
-    void Update(ILocalizationSource source);
+    /// <param name="source">The source.</param>
+    void Load(ILocalizationSource source);
+
+    /// <summary>
+    /// Saves the localization data to the specified source.
+    /// </summary>
+    /// <param name="source">The source.</param>
+    void Save(ILocalizationSource source);
 }
