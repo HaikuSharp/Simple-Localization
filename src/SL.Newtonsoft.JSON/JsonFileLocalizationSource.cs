@@ -3,6 +3,7 @@ using Newtonsoft.Json.Linq;
 using SL.Abstraction;
 using System.Collections.Generic;
 using System.IO;
+using System.Runtime;
 using System.Threading.Tasks;
 
 namespace SL.Newtonsoft.JSON;
@@ -11,11 +12,10 @@ namespace SL.Newtonsoft.JSON;
 /// A file-based localization source that uses JSON format for storage.
 /// Supports nested JSON structures with configurable key separators.
 /// </summary>
-public class JsonFileLocalizationSource(string filePath, string separator, JsonSerializerSettings settings) : IFileLocalizationSource
+public class JsonFileLocalizationSource(string filePath, string separator) : IFileLocalizationSource
 {
     private readonly string m_Separator = separator;
     private readonly Dictionary<string, RawLocalizedString> m_Raws = [];
-    private readonly JsonSerializerSettings m_JsonSettings = settings;
 
     /// <inheritdoc/>
     public string FilePath => filePath;
@@ -38,31 +38,31 @@ public class JsonFileLocalizationSource(string filePath, string separator, JsonS
     /// <inheritdoc/>
     public void Load()
     {
-        if(!File.Exists(FilePath))
-        {
-            m_Raws.Clear();
-            return;
-        }
+        if(!File.Exists(filePath)) throw new FileNotFoundException(filePath);
 
-        var json = File.ReadAllText(FilePath);
-        var jsonObject = JObject.Parse(json);
+        using StreamReader streamReader = new(filePath);
+        using JsonTextReader jsonReader = new(streamReader);
 
-        m_Raws.Clear();
-        FlattenJsonObject(jsonObject, string.Empty, m_Raws);
+        var source = JToken.Load(jsonReader);
+        FlattenJsonObject(source, string.Empty, m_Raws);
     }
 
     /// <inheritdoc/>
     public void Save()
     {
-        var directory = Path.GetDirectoryName(FilePath);
-        if(!string.IsNullOrEmpty(directory) && !Directory.Exists(directory))
-        {
-            Directory.CreateDirectory(directory);
-        }
+        var token = BuildJsonTree(m_Raws.Values);
 
-        var tree = BuildJsonTree(m_Raws.Values);
-        var json = JsonConvert.SerializeObject(tree, m_JsonSettings);
-        File.WriteAllText(FilePath, json);
+        string directory = Path.GetDirectoryName(filePath);
+
+        if(!string.IsNullOrEmpty(directory) && !Directory.Exists(directory)) _ = Directory.CreateDirectory(directory);
+
+        using StreamWriter streamWriter = new(filePath);
+        using JsonTextWriter jsonWriter = new(streamWriter)
+        {
+            Formatting = Formatting.Indented
+        };
+
+        token.WriteTo(jsonWriter);
     }
 
     /// <inheritdoc/>
