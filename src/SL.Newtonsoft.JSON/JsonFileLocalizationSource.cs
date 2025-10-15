@@ -3,7 +3,6 @@ using Newtonsoft.Json.Linq;
 using SL.Abstraction;
 using System.Collections.Generic;
 using System.IO;
-using System.Runtime;
 using System.Threading.Tasks;
 
 namespace SL.Newtonsoft.JSON;
@@ -62,7 +61,7 @@ public class JsonFileLocalizationSource(string filePath, string separator) : IFi
             Formatting = Formatting.Indented
         };
 
-        token.WriteTo(jsonWriter);
+        token.WriteTo(jsonWriter, []);
     }
 
     /// <inheritdoc/>
@@ -97,7 +96,7 @@ public class JsonFileLocalizationSource(string filePath, string separator) : IFi
             Formatting = Formatting.Indented
         };
 
-        await source.WriteToAsync(jsonWriter).ConfigureAwait(false);
+        await source.WriteToAsync(jsonWriter, []).ConfigureAwait(false);
     }
 
     private void FlattenJsonObject(JToken token, string currentPath, Dictionary<string, RawLocalizedString> result)
